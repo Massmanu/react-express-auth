@@ -58,7 +58,7 @@ app.get('/api/ec2-dns', async (req, res) => {
             })
         );
         res.json({ dns: response.Parameter.Value });
-        console.log(response.Parameter.Value);
+
     } catch (error) {
         console.error('Error fetching DNS from SSM:', error);
         res.status(500).json({ error: 'Failed to fetch EC2 DNS' });

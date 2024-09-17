@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@aws-sdk/client-ssm": "^3.651.1",
-    "aws-sdk": "^2.1691.0",
-    "cors": "^2.8.5"
-  }
-}

@@ -24,7 +24,7 @@ function Login() {
     }, []);
 
     const handleLogin = () => {
-        axios.post(`${publicDNS}:5000/login`, {
+        axios.post(`http://${publicDNS}:5000/login`, {
             email: email,
             password: password,
         })
@@ -47,6 +47,7 @@ function Login() {
         <div className="auth-container">
             <div className="auth-box">
                 <h2>Login</h2>
+                <h2>{publicDNS}</h2>
                 <input
                     type="text"
                     placeholder="Email"
