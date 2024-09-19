@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
+import backGroundVideo from './background_video.mp4'
 
 function Home() {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ function Home() {
         <div className="home-container">
             <div className="overlay"></div>
             <video className="background-video" autoPlay loop muted>
-                <source src="./background_video.mp4" type="video/mp4" />
+                <source src={backGroundVideo} type="video/mp4" />
             </video>
             <div className="content">
                 <h1 className="home-title">Welcome to VideoX</h1>

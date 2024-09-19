@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Upload.css';
@@ -9,6 +9,21 @@ function Upload() {
     const [message, setMessage] = useState('');
     const [progress, setProgress] = useState(0);
     const navigate = useNavigate();
+
+    const urlEndpoint = 'http://myvideotranscoder.cab432.com'
+
+    const [publicDNS, setPublicDNS] = useState('');
+    useEffect(() => {
+        async function fetchDNS() {
+            try {
+                const response = await axios.get(`${urlEndpoint}:5000/api/ec2-dns`);
+                setPublicDNS(response.data.dns);
+            } catch (error) {
+                console.error('Error fetching public DNS:', error);
+            }
+        }
+        fetchDNS();
+    }, []);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -25,7 +40,7 @@ function Upload() {
 
         try {
             setMessage('Uploading video...');
-            const response = await axios.post('http://ec2-54-253-16-126.ap-southeast-2.compute.amazonaws.com:5000/upload', formData, {
+            const response = await axios.post(`http://${publicDNS}:5000/upload`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -42,7 +57,7 @@ function Upload() {
     };
 
     const listenForProgressUpdates = () => {
-        const eventSource = new EventSource('http://ec2-54-253-16-126.ap-southeast-2.compute.amazonaws.com:5000/progress');
+        const eventSource = new EventSource(`http://${publicDNS}:5000/progress`);
 
         eventSource.onmessage = (event) => {
             const progressPercent = parseFloat(event.data);

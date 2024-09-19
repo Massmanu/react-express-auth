@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Register.css';
 
@@ -8,13 +8,29 @@ function Register() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const urlEndpoint = 'http://myvideotranscoder.cab432.com'
+
+    const [publicDNS, setPublicDNS] = useState('');
+    useEffect(() => {
+        async function fetchDNS() {
+            try {
+                const response = await axios.get(`${urlEndpoint}:5000/api/ec2-dns`);
+                setPublicDNS(response.data.dns);
+            } catch (error) {
+                console.error('Error fetching public DNS:', error);
+            }
+        }
+        fetchDNS();
+    }, []);
+
+
     const handleRegister = () => {
         if (password !== confirmPassword) {
             alert('Passwords do not match');
             return;
         }
 
-        axios.post('http://ec2-54-253-16-126.ap-southeast-2.compute.amazonaws.com:5000/register', {
+        axios.post(`http://${publicDNS}:5000/register`, {
             full_name: fullName,
             email: email,
             password: password,

@@ -7,11 +7,26 @@ function VideoPlayer() {
     const [selectedVideo, setSelectedVideo] = useState(null);
     const [playingIndex, setPlayingIndex] = useState(null);
 
+    const urlEndpoint = 'http://myvideotranscoder.cab432.com'
+
+    const [publicDNS, setPublicDNS] = useState('');
+    useEffect(() => {
+        async function fetchDNS() {
+            try {
+                const response = await axios.get(`${urlEndpoint}:5000/api/ec2-dns`);
+                setPublicDNS(response.data.dns);
+            } catch (error) {
+                console.error('Error fetching public DNS:', error);
+            }
+        }
+        fetchDNS();
+    }, []);
+
     useEffect(() => {
         const fetchVideos = async () => {
             try {
                 const token = localStorage.getItem('jwtToken');
-                const response = await axios.get('http://ec2-54-253-16-126.ap-southeast-2.compute.amazonaws.com:5000/videos', {
+                const response = await axios.get(`http://${publicDNS}:5000/videos`, {
                     headers: { 'Authorization': `Bearer ${token}` },
                 });
                 console.log('Fetched videos:', response.data); // Debugging line
@@ -33,7 +48,7 @@ function VideoPlayer() {
         console.log('Deleting video with ID:', videoId); // Debugging line
         try {
             const token = localStorage.getItem('jwtToken');
-            await axios.delete(`http://ec2-54-253-16-126.ap-southeast-2.compute.amazonaws.com:5000/videos/${videoId}`, {
+            await axios.delete(`http://${publicDNS}:5000/videos/${videoId}`, {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
 

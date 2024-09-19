@@ -9,12 +9,13 @@ function Login() {
     const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
+    const urlEndpoint = 'http://myvideotranscoder.cab432.com'
 
     const [publicDNS, setPublicDNS] = useState('');
     useEffect(() => {
         async function fetchDNS() {
             try {
-                const response = await axios.get('/api/ec2-dns');
+                const response = await axios.get(`${urlEndpoint}:5000/api/ec2-dns`);
                 setPublicDNS(response.data.dns);
             } catch (error) {
                 console.error('Error fetching public DNS:', error);
@@ -47,7 +48,7 @@ function Login() {
         <div className="auth-container">
             <div className="auth-box">
                 <h2>Login</h2>
-                <h2>{publicDNS}</h2>
+
                 <input
                     type="text"
                     placeholder="Email"
